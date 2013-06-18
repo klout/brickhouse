@@ -4,7 +4,7 @@
 
 	<groupId>com.klout</groupId>
 	<artifactId>brickhouse</artifactId>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<packaging>jar</packaging>
 	<name>Brickhouse</name>
 	<description>Extensions of Hive for the Data Developer</description>

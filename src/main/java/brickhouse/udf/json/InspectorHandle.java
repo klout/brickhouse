@@ -202,7 +202,10 @@ public interface InspectorHandle {
 			}
 			switch( category) {
 			case STRING:
-				return jsonNode.getTextValue();
+				if( jsonNode.isTextual())
+					return jsonNode.getTextValue();
+				else
+					return jsonNode.toString();
 			case LONG:
 				return jsonNode.getLongValue();
 			case SHORT:

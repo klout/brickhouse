@@ -34,5 +34,4 @@ public class JsonUDFTest {
 		
 		Assert.assertEquals( "this_text_is_in_camel_case", under);
 	}
-	
 }

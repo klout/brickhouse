@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import brickhouse.udf.sketch.SetSimilarityUDF;
+import brickhouse.udf.json.GetMainCategoryUDF;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
@@ -57,30 +58,30 @@ public class SketchSetTest {
 			ss.addItem( "" + randHash);
 		}
 		double ratio = ss.estimateReach()/(double)numHashes;
-		System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
+		//System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
 		Assert.assertTrue( ratio > 0.9 && ratio < 1.1);
 		
 		
 		ss.addHash( minHash -1 );
 		numHashes++;
 		ratio = ss.estimateReach()/(double)numHashes;
-		System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
+		//System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
 		Assert.assertTrue( ratio > 0.95 && ratio < 1.05);
 
 		ss.addHash( minHash -1 );
 		ratio = ss.estimateReach()/(double)numHashes;
-		System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
+		//System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
 		Assert.assertTrue( ratio > 0.95 && ratio < 1.05);
 
 		ss.addHash( minHash -2 );
 		numHashes++;
 		ratio = ss.estimateReach()/(double)numHashes;
-		System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
+		//System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
 		Assert.assertTrue( ratio > 0.95 && ratio < 1.05);
 
 		ss.addHash( minHash -2 );
 		ratio = ss.estimateReach()/(double)numHashes;
-		System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
+		//System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
 		Assert.assertTrue( ratio > 0.95 && ratio < 1.05);
 		
 		
@@ -88,7 +89,7 @@ public class SketchSetTest {
 		ss.addHash( lastHash - 1);
 		numHashes++;
 		ratio = ss.estimateReach()/(double)numHashes;
-		System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
+		//System.out.println(" Estimate reach = " + ss.estimateReach() + " size = "  + numHashes  + " ratio = " + ratio);
 		Assert.assertTrue( ratio > 0.95 && ratio < 1.05);
 		
 	}
@@ -113,10 +114,10 @@ public class SketchSetTest {
 		
 		int diff = (int) Math.abs( card - numHashes);
 		double diffRatio = ((double)diff)/numHashes;
-		System.out.println(" Estimated cardinality is " +card + " ; Expected " + numHashes + " ; Difference was " + diff + " ; diff ratio is " + diffRatio);
+		//System.out.println(" Estimated cardinality is " +card + " ; Expected " + numHashes + " ; Difference was " + diff + " ; diff ratio is " + diffRatio);
 		Assert.assertTrue( diffRatio <= tolerance);
 		
-		System.out.println(" Estimated cardinality is " +card);
+		//System.out.println(" Estimated cardinality is " +card);
 		Assert.assertEquals( numHashes, card, numHashes*tolerance);
 	}
 
@@ -143,23 +144,23 @@ public class SketchSetTest {
 
 			int diff = (int) Math.abs( card - numHashes);
 			double diffRatio = ((double)diff)/numHashes;
-			System.out.println(" J = " + j);
-			System.out.println(" Estimated cardinality is " +card + " ; Expected " + numHashes + " ; Difference was " + diff + " ; diff ratio is " + diffRatio);
+			//System.out.println(" J = " + j);
+			//System.out.println(" Estimated cardinality is " +card + " ; Expected " + numHashes + " ; Difference was " + diff + " ; diff ratio is " + diffRatio);
 			Assert.assertTrue( diffRatio <= tolerance);
 			if(diffRatio > maxDiff)
 				maxDiff = diffRatio;
 
 			totDiff+= diffRatio;
-			System.out.println(" Estimated cardinality is " +card);
+			//System.out.println(" Estimated cardinality is " +card);
 			Assert.assertEquals( numHashes, card, numHashes*tolerance);
 		}
 		long later = System.currentTimeMillis();
 		int numSecs = (int) ((later -now)/1000.0);
-		System.out.println(" Max Diff Ratio = " + maxDiff);
+		//System.out.println(" Max Diff Ratio = " + maxDiff);
 		double avgDiff = totDiff/(double)numRuns;
-		System.out.println(" Avg Diff Ratio = " + avgDiff);
+		//System.out.println(" Avg Diff Ratio = " + avgDiff);
 		
-		System.out.print( numRuns + " took " + numSecs);
+		//System.out.print( numRuns + " took " + numSecs);
 	}
 
 
@@ -178,7 +179,7 @@ public class SketchSetTest {
 		
 		int diff = (int) Math.abs( card - numHashes);
 		double diffRatio = ((double)diff)/numHashes;
-		System.out.println(" Estimated cardinality is " +card + " ; Expected " + numHashes + " ; Difference was " + diff + " ; diff ratio is " + diffRatio);
+		//System.out.println(" Estimated cardinality is " +card + " ; Expected " + numHashes + " ; Difference was " + diff + " ; diff ratio is " + diffRatio);
 		Assert.assertTrue( diffRatio <= tolerance);
 	}
 	
@@ -187,7 +188,7 @@ public class SketchSetTest {
 		
 		SketchSet ss = new SketchSet(5000);
 		int numHashes1 = (int) ((double)(1024*512)*Math.random());
-		System.out.println(" Number of hashes one = " + numHashes1);
+		//System.out.println(" Number of hashes one = " + numHashes1);
 		for(int i=0; i<numHashes1; ++i) {
 			UUID randomUUID = UUID.randomUUID();
 			///System.out.println(" RandomUUID " + randomUUID.toString());
@@ -195,12 +196,12 @@ public class SketchSetTest {
 		}
 		
 		double card = ss.estimateReach();
-		System.out.println(" Estimated Card 1 = " + card);
+		//System.out.println(" Estimated Card 1 = " + card);
 		
 		
 		SketchSet ss2 = new SketchSet(5000);
 		int numHashes2 = (int) ((double)(1024*512)*Math.random());
-		System.out.println(" Number of hashes two = " + numHashes2);
+		//System.out.println(" Number of hashes two = " + numHashes2);
 		for(int i=0; i<numHashes2; ++i) {
 			UUID randomUUID = UUID.randomUUID();
 			///System.out.println(" RandomUUID " + randomUUID.toString());
@@ -208,16 +209,16 @@ public class SketchSetTest {
 		}
 		
 		double card2 = ss2.estimateReach();
-		System.out.println(" Estimated Card 2 = " + card2);
+		//System.out.println(" Estimated Card 2 = " + card2);
 		
 		ss.combine( ss2);
 		
 		double newCard = ss.estimateReach();
-		System.out.println(" Sum of hashes  = " + ( card + card2));
-		System.out.println(" Estimated Combined Card = " + newCard);
+		//System.out.println(" Sum of hashes  = " + ( card + card2));
+		//System.out.println(" Estimated Combined Card = " + newCard);
 		
 		
-		System.out.println(" New Card = " + newCard);
+		//System.out.println(" New Card = " + newCard);
 		
 	}
 	
@@ -226,7 +227,7 @@ public class SketchSetTest {
 		
 		SketchSet ss = new SketchSet(5000);
 		int numHashes1 = (int) ((double)(1024*512)*Math.random());
-		System.out.println(" Number of hashes one = " + numHashes1);
+		//System.out.println(" Number of hashes one = " + numHashes1);
 		for(int i=0; i<numHashes1; ++i) {
 			UUID randomUUID = UUID.randomUUID();
 			///System.out.println(" RandomUUID " + randomUUID.toString());
@@ -234,12 +235,12 @@ public class SketchSetTest {
 		}
 		
 		double card = ss.estimateReach();
-		System.out.println(" Estimated Card 1 = " + card);
+		//System.out.println(" Estimated Card 1 = " + card);
 		
 		
 		SketchSet ss2 = new SketchSet(5000);
 		int numHashes2 = (int) ((double)(1024*512)*Math.random());
-		System.out.println(" Number of hashes two = " + numHashes2);
+		//System.out.println(" Number of hashes two = " + numHashes2);
 		for(int i=0; i<numHashes2; ++i) {
 			UUID randomUUID = UUID.randomUUID();
 			///System.out.println(" RandomUUID " + randomUUID.toString());
@@ -247,11 +248,11 @@ public class SketchSetTest {
 		}
 		
 		double card2 = ss2.estimateReach();
-		System.out.println(" Estimated Card 2 = " + card2);
+		//System.out.println(" Estimated Card 2 = " + card2);
 		
 		SketchSet ss3 = new SketchSet(5000);
 		int numHashes3 = (int) ((double)(1024*512)*Math.random());
-		System.out.println(" Number of hashes three = " + numHashes3);
+		//System.out.println(" Number of hashes three = " + numHashes3);
 		for(int i=0; i<numHashes3; ++i) {
 			UUID randomUUID = UUID.randomUUID();
 			///System.out.println(" RandomUUID " + randomUUID.toString());
@@ -259,7 +260,7 @@ public class SketchSetTest {
 		}
 		
 		double card3 = ss3.estimateReach();
-		System.out.println(" Estimated Card 3= " + card3);
+		//System.out.println(" Estimated Card 3= " + card3);
 		
 		ss.combine( ss2);
 		
@@ -267,21 +268,21 @@ public class SketchSetTest {
 		ss.combine( ss2);
 		
 		double cardCombine1 = ss.estimateReach();
-		System.out.println(" Combine 1 = " + cardCombine1);
-		System.out.println(" 1 +2 " + ( numHashes1 + numHashes2 ));
+		//System.out.println(" Combine 1 = " + cardCombine1);
+		//System.out.println(" 1 +2 " + ( numHashes1 + numHashes2 ));
 		
 		ss3.combine( ss2);
 		double cardCombine3 = ss3.estimateReach();
-		System.out.println(" Combine 3 = " + cardCombine3);
-		System.out.println(" 2  + 3 " + ( numHashes3 + numHashes2 ));
+		//System.out.println(" Combine 3 = " + cardCombine3);
+		//System.out.println(" 2  + 3 " + ( numHashes3 + numHashes2 ));
 		
 		SketchSet overLap = new SketchSet();
 		overLap.combine( ss);
 		overLap.combine( ss3 );
 		
 		double cardOverlap = overLap.estimateReach();
-		System.out.println(" Overlap = " + cardOverlap);
-		System.out.println(" All hashes = " + ( numHashes1 + numHashes2 + numHashes3));
+		//System.out.println(" Overlap = " + cardOverlap);
+		//System.out.println(" All hashes = " + ( numHashes1 + numHashes2 + numHashes3));
 		
 	}
 	
@@ -304,23 +305,23 @@ public class SketchSetTest {
 			cnt++;
 		}
 		
-		System.out.println(" Estimated Reach = " + ss.estimateReach() + " count = " + cnt);
+		//System.out.println(" Estimated Reach = " + ss.estimateReach() + " count = " + cnt);
 		double diff = cnt - ss.estimateReach();
 		double pctDiff = Math.abs( diff/(double)cnt);
-		System.out.println( " Difference is " + pctDiff);
+		//System.out.println( " Difference is " + pctDiff);
 		
 		Assert.assertTrue( pctDiff < 0.03);
 		
-		System.out.println(" Estimated Reach = " + ss2.estimateReach() + " count = " + cnt);
+		//System.out.println(" Estimated Reach = " + ss2.estimateReach() + " count = " + cnt);
 		 diff = cnt - ss2.estimateReach();
 		 pctDiff = Math.abs( diff/(double)cnt);
-		System.out.println( " Difference is " + pctDiff);
+		//System.out.println( " Difference is " + pctDiff);
 		
 		Assert.assertTrue( pctDiff < 0.03);
 		
 		SortedMap<Long,String> hashItemMap = ss.getHashItemMap();
-		System.out.println( " First Key is " +  hashItemMap.firstKey() );
-		System.out.println( " Last Key is " +  hashItemMap.lastKey() );
+		//System.out.println( " First Key is " +  hashItemMap.firstKey() );
+		//System.out.println( " Last Key is " +  hashItemMap.lastKey() );
 	}
 	
 	
@@ -343,7 +344,7 @@ public class SketchSetTest {
 		}
 		double estReach = SketchSet.EstimatedReach( last, ss.getMaxItems());
 		double ratio = estReach/(double)numHashes;
-		System.out.println( " Estimated Reach = " + estReach + " num Hashes  = " + numHashes + " ; Ratio = " + ratio);
+		//System.out.println( " Estimated Reach = " + estReach + " num Hashes  = " + numHashes + " ; Ratio = " + ratio);
 		Assert.assertTrue( ratio < 1.05 && ratio > 0.95);
 		
 	}
@@ -367,23 +368,29 @@ public class SketchSetTest {
 		SetSimilarityUDF simUDF = new SetSimilarityUDF();
 		
 		double same = simUDF.evaluate(a.getMinHashItems(), a.getMinHashItems());
-		System.out.println( "Similarity with self = " + same);
+		//System.out.println( "Similarity with self = " + same);
 		Assert.assertEquals( 1.0, same, 0);
 		
 		double diff = simUDF.evaluate(a.getMinHashItems(), b.getMinHashItems());
-		System.out.println( "Similarity with different  = " + diff);
+		//System.out.println( "Similarity with different  = " + diff);
 		Assert.assertEquals( 0, diff , 0.03); /// Might not be quite zero
 		
 		a.combine(c);
 		b.combine(c);
 		
 		double mixed = simUDF.evaluate( a.getMinHashItems(), b.getMinHashItems());
-		System.out.println("Similarity with mixed = " +mixed);
+		//System.out.println("Similarity with mixed = " +mixed);
 		//// Should be about a third
 		Assert.assertEquals( 0.333333333, mixed, 0.03);
 		
 	}
 
-
+	@Test 
+	public void testGetMainCategoryUDF() {
+		GetMainCategoryUDF test = new GetMainCategoryUDF();
+		String result = test.evaluate("[{\"id\":\"896\",\"parents\":[],\"name\":\"Hardware\"},{\"id\":\"900\",\"parents\":[\"896\"],\"name\":\"Armazenamento\"},{\"id\":\"904\",\"parents\":[\"900\"],\"name\":\"SSD\"},{\"id\":\"1027\",\"parents\":[],\"name\":\"Promoc3a7c3b5es\"},{\"id\":\"1409\",\"parents\":[\"1027\"],\"name\":\"BoxingWeek\"},{\"id\":\"1424\",\"parents\":[\"1027\"],\"name\":\"Festival de Hardware\"},{\"id\":\"1425\",\"parents\":[\"1027\"],\"name\":\"Festival de informc3a1tica\"}]");
+		System.out.println(result);
+		Assert.assertTrue(result.equals("{\"id\":\"896\",\"parents\":[],\"name\":\"Hardware\"}"));
+	}
 
 }

@@ -178,18 +178,18 @@ public class HyperLogLogUDAFTest {
     Assert.assertTrue( relDiff < maxError);
   }
   
-  @Test
+  /*@Test
   public void testCardinalityEstimateWithinBounds12() throws HiveException, IOException {
     LOG.info("Running Test: " + name.getMethodName());
     
     testCardinalityEstimateWithinBounds(12, 100000L);
-  }
+  }*/
   
-  @Test
+  /*@Test
   public void testCardinalityEstimateWithinBounds16() throws HiveException, IOException {
     LOG.info("Running Test: " + name.getMethodName());
     
     testCardinalityEstimateWithinBounds(16, 100000L);
-  }
+  }*/
   
 }

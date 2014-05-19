@@ -58,17 +58,17 @@ public class JsonSplitUDF extends GenericUDF {
   public Object evaluate(DeferredObject[] arguments) throws HiveException {
     try {
       String jsonString = this.stringInspector.getPrimitiveJavaObject(arguments[0].get());
-      
       //// Logic is the same as "from_json"
-      ObjectMapper om = new ObjectMapper();
-      JsonNode jsonNode = om.readTree( jsonString);
-      return inspHandle.parseJson(jsonNode);
+      //ObjectMapper om = new ObjectMapper();
+      //JsonNode jsonNode = om.readTree( jsonString);
+      //return inspHandle.parseJson(jsonNode);
+      return jsonString;
 
 
-    } catch( JsonProcessingException jsonProc) {
-      throw new HiveException(jsonProc);
-    } catch (IOException e) {
-      throw new HiveException(e);
+    //} catch( JsonProcessingException jsonProc) {
+    //  throw new HiveException(jsonProc);
+    //} catch (IOException e) {
+    //  throw new HiveException(e);
     } catch (NullPointerException npe){
       return null;
     }
@@ -83,6 +83,7 @@ public class JsonSplitUDF extends GenericUDF {
   @Override
   public ObjectInspector initialize(ObjectInspector[] arguments)
       throws UDFArgumentException {
+        System.out.println("AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII2");
     if(arguments.length != 1 && arguments.length != 2) {
       throw new UDFArgumentException("Usage : json_split( jsonstring, optional typestring) ");
     }
@@ -119,3 +120,21 @@ public class JsonSplitUDF extends GenericUDF {
   }
 
 }
+
+/*import org.apache.hadoop.hive.ql.exec.Description;
+import org.apache.hadoop.hive.ql.exec.UDF;
+import org.apache.hadoop.io.Text;
+
+
+@Description(
+  name="SimpleUDFExample",
+  value="returns 'hello x', where x is whatever you give it (STRING)",
+  extended="SELECT simpleudfexample('world') from foo limit 1;"
+  )
+class JsonSplitUDF extends UDF {
+  
+  public Text evaluate(Text input) {
+    if(input == null) return null;
+    return new Text("Hello " + input.toString());
+  }
+}*/

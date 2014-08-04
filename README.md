@@ -23,6 +23,13 @@ Welcome to the Brickhouse
    
  * _hbase_ - Experimental UDFs for an alternative way to integrate
 	  Hive with HBase.
+
+The ETL4 specific UDFs can be found in the _json_ package:
+ * GetMainCategoryUDF
+ * NullNormalizerUDF
+ * JsonToArrayUDF
+
+ After updating an UDF, use "mvn package" to compile the brickhouse-0.7.0-SNAPSHOT.jar and copy it to the folder hive/s3_files at ETL4 project.
      
 Requirements:
 --------------

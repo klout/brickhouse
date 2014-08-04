@@ -393,4 +393,12 @@ public class SketchSetTest {
 		Assert.assertTrue(result.equals("{\"id\":\"896\",\"parents\":[],\"name\":\"Hardware\"}"));
 	}
 
+	@Test 
+	public void testGetMainCategoryUDF_2() {
+		GetMainCategoryUDF test = new GetMainCategoryUDF();
+		String result = test.evaluate("[{\"id\":\"Livros\",\"parents\":\"null\",\"name\":\"Livros\"},{\"id\":\"900\",\"parents\":[\"896\"],\"name\":\"Armazenamento\"},{\"id\":\"904\",\"parents\":[\"900\"],\"name\":\"SSD\"},{\"id\":\"1027\",\"parents\":[],\"name\":\"Promoc3a7c3b5es\"},{\"id\":\"1409\",\"parents\":[\"1027\"],\"name\":\"BoxingWeek\"},{\"id\":\"1424\",\"parents\":[\"1027\"],\"name\":\"Festival de Hardware\"},{\"id\":\"1425\",\"parents\":[\"1027\"],\"name\":\"Festival de informc3a1tica\"}]");
+		System.out.println(result);
+		Assert.assertTrue(result.equals("{\"id\":\"Livros\",\"parents\":\"null\",\"name\":\"Livros\"}"));
+	}
+
 }

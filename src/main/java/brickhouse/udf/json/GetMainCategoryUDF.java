@@ -40,11 +40,12 @@ import org.apache.hadoop.hive.ql.exec.UDF;
       }
 
       String item;
-      String model = "\"parents\":[]";
+      String model_1 = "\"parents\":[]";
+      String model_2 = "\"parents\":\"null\"";
       for (int i = 0; i < anArray.size(); i++)
       {
         item = anArray.get(i);
-        if(item.toLowerCase().contains(model.toLowerCase()))
+        if(item.toLowerCase().contains(model_1.toLowerCase()) || item.toLowerCase().contains(model_2.toLowerCase()))
           return item;
       }
       return null;

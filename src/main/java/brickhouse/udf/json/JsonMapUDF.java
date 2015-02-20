@@ -56,8 +56,7 @@ public class JsonMapUDF extends GenericUDF {
     private InspectorHandle inspHandle;
 
     @Override
-    public ObjectInspector initialize(ObjectInspector[] arguments)
-            throws UDFArgumentException {
+    public ObjectInspector initialize(ObjectInspector[] arguments) throws UDFArgumentException {
         if(arguments.length != 1 && arguments.length != 2) {
             throw new UDFArgumentException("Usage : json_map( jsonstring, optional typestring ) ");
         }
@@ -110,11 +109,15 @@ public class JsonMapUDF extends GenericUDF {
     @Override
     public Object evaluate(DeferredObject[] arguments) throws HiveException {
         try {
-            String jsonString =  this.stringInspector.getPrimitiveJavaObject(arguments[0].get());
+            if (null == arguments[0].get()) {
+                return null;
+            }
+
+            String jsonString = this.stringInspector.getPrimitiveJavaObject(arguments[0].get());
 
             //// Logic is the same as "from_json"
             ObjectMapper om = new ObjectMapper();
-            JsonNode jsonNode = om.readTree( jsonString);
+            JsonNode jsonNode = om.readTree(jsonString);
             return inspHandle.parseJson(jsonNode);
 
         } catch (JsonProcessingException e) {

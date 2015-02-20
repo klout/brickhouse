@@ -13,6 +13,10 @@ import org.junit.Test;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
+import org.apache.hadoop.hive.ql.metadata.HiveException;
+import org.apache.hadoop.hive.ql.udf.generic.GenericUDF.*;
+import brickhouse.udf.json.*;
+
 public class JsonUDFTest {
 
 	@Test
@@ -34,5 +38,12 @@ public class JsonUDFTest {
 		
 		Assert.assertEquals( "this_text_is_in_camel_case", under);
 	}
-	
+
+	@Test
+	public void testJsonMapHandlesNulls() throws HiveException {
+		JsonMapUDF cut = new JsonMapUDF();
+		Object result = cut.evaluate( new DeferredObject[]{ new DeferredJavaObject(null) } );
+		Assert.assertNull( result );
+	}
+
 }

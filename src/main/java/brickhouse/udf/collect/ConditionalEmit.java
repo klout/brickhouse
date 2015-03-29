@@ -42,8 +42,8 @@ import org.apache.hadoop.hive.serde2.objectinspector.primitive.StringObjectInspe
  *   rather than doing a union of multiple views with different where clauses.
  *   
  *   select 
- *       conditional_emit( array( maxwell_score > 80 , 
- *                     abs( maxwell_score - other.maxwell_score ) < 5,
+ *       conditional_emit( array( maxwell_score &gt; 80 , 
+ *                     abs( maxwell_score - other.maxwell_score ) &lt; 5,
  *                     city = "New York" ),
  *                       array( "CELEB" , "PEER", "NEW_YORKER" ) )
  *    from big_table_which_is_hard_to_sort;

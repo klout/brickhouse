@@ -69,15 +69,15 @@ import org.apache.log4j.Logger;
  *   
  *   
  *   If one argument is passed in, it is assumed to be a filename, containing
- *    a map of type map<string,double>, and the entire map is returned.
+ *    a map of type map&lt;string,double&gt;, and the entire map is returned.
  *    
  *   If two arguments are passed in, it is either filename, and a string specifying the
- *    type of the map ( i.e distributed_map('mymap','map<string,bigint>'); ) and returns
+ *    type of the map ( i.e distributed_map('mymap','map&lt;string,bigint&gt;'); ) and returns
  *     the entire map, or it is the key and the filename ( ie distributed_map( key, 'mymap'),
  *     and only the key's value is returned.
  *     
  *   If there are three arguments passed in, it is assumed to be the key, the filename, and the 
- *    maptype, (i.e distributed_map( key, 'mymap', 'map<string,bigint>') )
+ *    maptype, (i.e distributed_map( key, 'mymap', 'map&lt;string,bigint&gt;') )
  *
  */
 @UDFType(deterministic=false)
@@ -219,7 +219,7 @@ public class DistributedMapUDF extends GenericUDF {
 	/**
 	 *  Either one, two or three values can be passed in.
 	 *  If one argument is passed it, it is implied that the 
-	 *   return value is a map<string,double>. If three arguments
+	 *   return value is a map&lt;string,double&gt;. If three arguments
 	 *   are passed in, then it is implied the arguments are the
 	 *    map key, the map filename, and the value type.
 	 *    

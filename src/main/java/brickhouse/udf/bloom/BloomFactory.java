@@ -74,7 +74,7 @@ public class BloomFactory {
 	 *   First, the local map is checked for a bloom loaded from 
 	 *   the distributed cache. Next the bloom is attempted to be 
 	 *    parsed from UUencoded format.
-	 * @param name
+	 * @param str
 	 * @return
 	 */
 	public static Filter GetBloomFilter( String str) {

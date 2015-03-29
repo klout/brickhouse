@@ -39,7 +39,7 @@ import com.google.common.util.concurrent.UncheckedExecutionException;
  *    
  *   One can cache strings, or arbitrary Hive structures, by storing values as
  *     JSON strings, and using a template object similiar to the one used in 
- *     the from_json UDF. An example would be storing a map<string,double> as 
+ *     the from_json UDF. An example would be storing a map&lt;string,double&gt; as 
  *     a bag-of-words, or an array&lt;string&gt; to store a sketch-set
  *    
  *

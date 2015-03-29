@@ -35,7 +35,7 @@ import org.apache.hadoop.hive.ql.exec.UDF;
  *     (  select ks_uid, val from table1 
  *          distribute  by ks_uid 
  *            sort by ks_uid, val ) ordered_keys
- *   where group_count( ks_uid ) < 100  
+ *   where group_count( ks_uid ) &lt; 100  
  *     
  *
  */

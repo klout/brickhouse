@@ -22,7 +22,7 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 import org.apache.hadoop.io.IntWritable;
 
 /**
- * Evaluates the 32 bit x86 version of MurmurHash3 of array<string>.
+ * Evaluates the 32 bit x86 version of MurmurHash3 of array&lt;string&gt;.
  * Passing a seed value is optional, the default seed used is 1.
  * Offset is set to 0.
  */

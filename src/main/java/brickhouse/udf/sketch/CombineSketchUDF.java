@@ -39,8 +39,8 @@ import brickhouse.analytics.uniques.SketchSet;
  *  UDF to combine two sketch sets, to estimate size of set union.
  *  
  *  Sketch sets can be either the set of original strings or the  
- *    MD5 hashes. If array<string> is passed in, it is assumed to be 
- *    the original sketch_set values; if array<bigint> is used, then
+ *    MD5 hashes. If array&lt;string&gt; is passed in, it is assumed to be 
+ *    the original sketch_set values; if array&lt;bigint&gt; is used, then
  *     it is assumed to be the KMin hash values created with sketch_values
  *
  */

@@ -54,15 +54,15 @@ public class SessionizeEdmodoUDF extends UDF {
 			  order = 1;
 		  }
 		  StringBuilder sb = new StringBuilder();
-		  sb.append("{\"session_id\":");
+		  sb.append("{\"session_id\":\"");
 		  sb.append(lastSessionId);
-		  sb.append(",\"session_start\":");
+		  sb.append("\",\"session_start\":\"");
 		  sb.append(Long.toString(origTS));
-		  sb.append("\",\"session_start\":");
+		  sb.append("\",\"session_end\":\"");
 		  sb.append(Long.toString(lastTS));
-		  sb.append(",\"session_order\":");
+		  sb.append("\",\"session_order\":\"");
 		  sb.append(Long.toString(order));
-		  sb.append("}");
+		  sb.append("\"}");
 		  return sb.toString();
 	  }
 	  

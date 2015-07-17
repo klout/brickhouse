@@ -22,6 +22,7 @@ import org.apache.hadoop.hive.ql.metadata.HiveException;
 import org.apache.hadoop.hive.ql.parse.SemanticException;
 import org.apache.hadoop.hive.ql.udf.generic.AbstractGenericUDAFResolver;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
+import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFParameterInfo;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.BinaryObjectInspector;
@@ -41,8 +42,10 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
     private static final Logger LOG = Logger.getLogger(UnionHyperLogLogUDAF.class);
 
     @Override
-    public GenericUDAFEvaluator getEvaluator(TypeInfo[] parameters)
+    public GenericUDAFEvaluator getEvaluator(GenericUDAFParameterInfo info)
             throws SemanticException {
+        LOG.error("Getting evaluator class...");
+        TypeInfo[] parameters = info.getParameters();
         if (parameters.length != 1) {
             throw new UDFArgumentTypeException(parameters.length - 1,
                     "Please specify one argument.");
@@ -64,6 +67,7 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
         if (parameters.length > 1) throw new IllegalArgumentException("Function only takes 1 parameter.");
 
+        LOG.error("Getting evaluator class...");
         return new MergeHyperLogLogUDAFEvaluator();
     }
 
@@ -76,7 +80,7 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
                 throws HiveException {
             super.init(m, parameters);
 
-            LOG.debug(" MergeHyperLogLogUDAF.init() - Mode= " + m.name());
+            LOG.error(" MergeHyperLogLogUDAF.init() - Mode= " + m.name());
 
             // init input object inspectors
             this.inputAndPartialBinaryOI = (BinaryObjectInspector) parameters[0];
@@ -88,20 +92,23 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
         @Override
         public AggregationBuffer getNewAggregationBuffer() throws HiveException {
+            LOG.error("Making Buffer...");
             HLLBuffer buff = new HLLBuffer();
             reset(buff);
+            LOG.error("Making Buffer...");
             return buff;
         }
 
         @Override
         public void iterate(AggregationBuffer agg, Object[] parameters)
                 throws HiveException {
+            LOG.error("Iterating...");
             try {
-
                 if (parameters[0] == null) {
+                    LOG.error("Item is null.");
                     return;
                 }
-
+                LOG.error("Merging...");
                 Object partial = parameters[0];
                 merge(agg, partial);
             } catch (Exception e) {
@@ -129,12 +136,14 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
         @Override
         public void reset(AggregationBuffer buff) throws HiveException {
+            LOG.error("Resetting buffer...");
             HLLBuffer hllBuff = (HLLBuffer) buff;
             hllBuff.reset();
         }
 
         @Override
         public Object terminate(AggregationBuffer agg) throws HiveException {
+            LOG.error("Terminating...");
             try {
                 HLLBuffer myagg = (HLLBuffer) agg;
                 return myagg.getPartial();
@@ -146,6 +155,7 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
         @Override
         public Object terminatePartial(AggregationBuffer agg) throws HiveException {
+            LOG.error("Terminating partial...");
             return terminate(agg);
         }
     }

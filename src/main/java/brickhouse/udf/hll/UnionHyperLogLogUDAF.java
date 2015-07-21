@@ -31,7 +31,7 @@ import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.log4j.Logger;
 
 /**
- * Aggregate multiple HyerLogLog structures together.
+ * Aggregate multiple HyperLogLog structures together.
  */
 
 @Description(name = "union_hyperloglog",

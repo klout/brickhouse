@@ -94,6 +94,8 @@ CREATE TEMPORARY FUNCTION hyperloglog AS 'brickhouse.udf.hll.HyperLogLogUDAF';
 CREATE TEMPORARY FUNCTION union_hyperloglog AS 'brickhouse.udf.hll.UnionHyperLogLogUDAF';
 CREATE TEMPORARY FUNCTION combine_hyperloglog AS 'brickhouse.udf.hll.CombineHyperLogLogUDF';
 CREATE TEMPORARY FUNCTION hll_est_cardinality AS 'brickhouse.udf.hll.EstimateCardinalityUDF';
+CREATE TEMPORARY FUNCTION hll_get_precision AS 'brickhouse.udf.hll.GetPrecisionUDF';
+CREATE TEMPORARY FUNCTION hll_validate_precisions AS 'brickhouse.udf.hll.ValidatePrecisionUDAF';
 
 
 

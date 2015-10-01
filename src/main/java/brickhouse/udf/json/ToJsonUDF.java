@@ -409,6 +409,8 @@ public class ToJsonUDF extends GenericUDF {
                 return new ByteInspectorHandle((ByteObjectInspector) primInsp);
             } else if (primCat == PrimitiveCategory.BINARY) {
                 return new BinaryInspectorHandle((BinaryObjectInspector) primInsp);
+            } else if (primCat == PrimitiveCategory.TIMESTAMP) {
+                return new TimestampInspectorHandle((TimestampObjectInspector) primInsp);
             }
 
 

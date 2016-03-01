@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import brickhouse.udf.sketch.SetSimilarityUDF;
 import brickhouse.udf.json.GetMainCategoryUDF;
+import brickhouse.udf.json.GetDeviceUDF;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
@@ -399,6 +400,22 @@ public class SketchSetTest {
 		String result = test.evaluate("[{\"id\":\"Livros\",\"parents\":\"null\",\"name\":\"Livros\"},{\"id\":\"900\",\"parents\":[\"896\"],\"name\":\"Armazenamento\"},{\"id\":\"904\",\"parents\":[\"900\"],\"name\":\"SSD\"},{\"id\":\"1027\",\"parents\":[],\"name\":\"Promoc3a7c3b5es\"},{\"id\":\"1409\",\"parents\":[\"1027\"],\"name\":\"BoxingWeek\"},{\"id\":\"1424\",\"parents\":[\"1027\"],\"name\":\"Festival de Hardware\"},{\"id\":\"1425\",\"parents\":[\"1027\"],\"name\":\"Festival de informc3a1tica\"}]");
 		System.out.println(result);
 		Assert.assertTrue(result.equals("{\"id\":\"Livros\",\"parents\":\"null\",\"name\":\"Livros\"}"));
+	}
+
+	@Test 
+	public void testGetDeviceUDF() {
+		GetDeviceUDF test = new GetDeviceUDF();
+		String result = test.evaluate("Windows Phone 8.1");
+		System.out.println(result);
+		Assert.assertTrue(result.equals("mobile"));
+	}
+
+	@Test 
+	public void testGetDeviceUDF_2() {
+		GetDeviceUDF test = new GetDeviceUDF();
+		String result = test.evaluate("Windows 8");
+		System.out.println(result);
+		Assert.assertTrue(result.equals("web"));
 	}
 
 }

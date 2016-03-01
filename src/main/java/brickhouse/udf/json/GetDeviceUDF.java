@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDF;
 
-@Description(name="classify_device",
+@Description(name="get_device",
       value = "_FUNC_(string)"
 
-) public class ClassifyDeviceUDF extends UDF {
+) public class GetDeviceUDF extends UDF {
 
    public String evaluate(String os) {
       try {

@@ -9,8 +9,11 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 
 ) public class GetDeviceUDF extends UDF {
 
-   public String evaluate(String os) {
+   public String evaluate(String os, String source) {
       try {
+         if(source != null && source != "")
+            return "api." + source;
+
          if(os == null ||
             os.equalsIgnoreCase("null") ||
             os.equalsIgnoreCase("[]"))
@@ -22,8 +25,8 @@ import org.apache.hadoop.hive.ql.exec.UDF;
             os.toLowerCase().contains("ios") ||
             os.toLowerCase().contains("blackberry"))
             return "mobile";
-         else
-            return "web";
+
+         return "web";
 
       } catch (NullPointerException npe){
          return null;

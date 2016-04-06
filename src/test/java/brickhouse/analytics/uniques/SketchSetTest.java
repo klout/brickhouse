@@ -405,7 +405,7 @@ public class SketchSetTest {
 	@Test 
 	public void testGetDeviceUDF() {
 		GetDeviceUDF test = new GetDeviceUDF();
-		String result = test.evaluate("Windows Phone 8.1");
+		String result = test.evaluate("Windows Phone 8.1", null);
 		System.out.println(result);
 		Assert.assertTrue(result.equals("mobile"));
 	}
@@ -413,9 +413,17 @@ public class SketchSetTest {
 	@Test 
 	public void testGetDeviceUDF_2() {
 		GetDeviceUDF test = new GetDeviceUDF();
-		String result = test.evaluate("Windows 8");
+		String result = test.evaluate("Windows 8", null);
 		System.out.println(result);
 		Assert.assertTrue(result.equals("web"));
+	}
+
+	@Test 
+	public void testGetDeviceUDF_3() {
+		GetDeviceUDF test = new GetDeviceUDF();
+		String result = test.evaluate("Windows 8", "mobile-app");
+		System.out.println(result);
+		Assert.assertTrue(result.equals("api.mobile-app"));
 	}
 
 }

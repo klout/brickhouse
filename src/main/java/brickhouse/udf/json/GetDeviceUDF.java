@@ -11,7 +11,7 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 
    public String evaluate(String os, String source) {
       try {
-         if(source != null && source != "")
+         if(source != null)
             return "api." + source;
 
          if(os == null ||

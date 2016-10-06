@@ -50,7 +50,7 @@ public class HyperLogLogUDAF extends AbstractGenericUDAFResolver {
     private static final Logger LOG = Logger.getLogger(HyperLogLogUDAF.class);
     static final int DEFAULT_PRECISION = 6;
     static final int MIN_PRECISION = 4;
-    static final int MAX_PRECISION = 16;
+    static final int MAX_PRECISION = 32;
 
     @SuppressWarnings("deprecation")
     @Override

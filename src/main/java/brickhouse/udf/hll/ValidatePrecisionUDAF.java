@@ -16,6 +16,7 @@ package brickhouse.udf.hll;
  *
  **/
 
+import com.clearspring.analytics.util.Varint;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentTypeException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -25,20 +26,25 @@ import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.PrimitiveObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.BinaryObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.BooleanObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.hive.serde2.typeinfo.PrimitiveTypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.log4j.Logger;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 
 /**
- * Aggregate multiple HyperLogLog structures together.
+ * Validates the precisions for a collection of HyperLogLog binaries,
+ * (aggregation necessarily requires the same precision).
+ * Returns true if and only if all elements have the same precision
  */
 
-@Description(name = "union_hyperloglog",
-        value = "_FUNC_(x) - Merges multiple hyperloglogs together. "
+@Description(name = "validate_precisions",
+        value = "_FUNC_(x) - Ensures equal precision values of HyperLogLog++ binaries. "
 )
-public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
-    private static final Logger LOG = Logger.getLogger(UnionHyperLogLogUDAF.class);
+public class ValidatePrecisionUDAF extends AbstractGenericUDAFResolver {
+    private static final Logger LOG = Logger.getLogger(ValidatePrecisionUDAF.class);
 
     @Override
     public GenericUDAFEvaluator getEvaluator(TypeInfo[] parameters)
@@ -64,31 +70,37 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
         if (parameters.length > 1) throw new IllegalArgumentException("Function only takes 1 parameter.");
 
-        return new MergeHyperLogLogUDAFEvaluator();
+        return new PrecisionHyperLogLogUDAFEvaluator();
     }
 
-    public static class MergeHyperLogLogUDAFEvaluator extends GenericUDAFEvaluator {
-        // For PARTIAL1 and COMPLETE: ObjectInspectors for original data
-        // For PARTIAL2 and FINAL: ObjectInspectors for partial aggregations (binary serialized hll object)
-        private BinaryObjectInspector inputAndPartialBinaryOI;
+    public static class PrecisionHyperLogLogUDAFEvaluator extends GenericUDAFEvaluator {
+        // For PARTIAL1 and COMPLETE: ObjectInspectors for original data (binary serialized hll object)
+        // For PARTIAL2 and FINAL: ObjectInspectors for partial aggregations (boolean)
+        private BinaryObjectInspector inputBinaryOI;
+        private BooleanObjectInspector partialBooleanOI;
 
         public ObjectInspector init(Mode m, ObjectInspector[] parameters)
                 throws HiveException {
             super.init(m, parameters);
 
-            LOG.debug(" MergeHyperLogLogUDAF.init() - Mode= " + m.name());
+            LOG.debug(" PrecisionHyperLogLogUDAF.init() - Mode= " + m.name());
 
-            // init input object inspectors
-            this.inputAndPartialBinaryOI = (BinaryObjectInspector) parameters[0];
-
-            // init output object inspectors
-            // The partial aggregate type is the same as the final type
-            return PrimitiveObjectInspectorFactory.javaByteArrayObjectInspector;
+            //Input (binary) object inspector
+            if (m == Mode.PARTIAL1 || m == Mode.COMPLETE) {
+                this.inputBinaryOI = (BinaryObjectInspector) parameters[0];
+            }
+            //Partial (boolean) object inspector
+            else {
+                // init input object inspectors
+                this.partialBooleanOI = (BooleanObjectInspector) parameters[0];
+            }
+            //Output object inspector
+            return PrimitiveObjectInspectorFactory.javaBooleanObjectInspector;
         }
 
         @Override
         public AggregationBuffer getNewAggregationBuffer() throws HiveException {
-            HLLBuffer buff = new HLLBuffer();
+            PrecisionBuffer buff = new PrecisionBuffer();
             reset(buff);
             return buff;
         }
@@ -102,8 +114,24 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
                     return;
                 }
 
-                Object partial = parameters[0];
-                merge(agg, partial);
+                Object input = parameters[0];
+                int precision;
+                byte[] bytes = inputBinaryOI.getPrimitiveJavaObject(input);
+                DataInputStream oi = new DataInputStream(new ByteArrayInputStream(bytes));
+                int version = oi.readInt();
+                if (version < 0) {
+                    precision = Varint.readUnsignedVarInt(oi);
+                }
+                else {
+                    precision = oi.readInt();
+                }
+                PrecisionBuffer myagg = (PrecisionBuffer) agg;
+                if (!myagg.isReady()) {
+                    myagg.setPrecision(precision);
+                }
+                else {
+                    myagg.merge((precision == myagg.getPrecision()));
+                }
             } catch (Exception e) {
                 LOG.error("Error", e);
                 throw new HiveException(e);
@@ -118,9 +146,9 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
             }
 
             try {
-                HLLBuffer myagg = (HLLBuffer) agg;
-                byte[] partialBuffer = this.inputAndPartialBinaryOI.getPrimitiveJavaObject(partial);
-                myagg.merge(partialBuffer);
+                PrecisionBuffer myagg = (PrecisionBuffer) agg;
+                boolean bool =  (Boolean) this.partialBooleanOI.getPrimitiveJavaObject(partial);
+                myagg.merge(bool);
             } catch (Exception e) {
                 LOG.error("Error", e);
                 throw new HiveException(e);
@@ -129,14 +157,14 @@ public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
         @Override
         public void reset(AggregationBuffer buff) throws HiveException {
-            HLLBuffer hllBuff = (HLLBuffer) buff;
-            hllBuff.reset();
+            PrecisionBuffer preBuff = (PrecisionBuffer) buff;
+            preBuff.reset();
         }
 
         @Override
         public Object terminate(AggregationBuffer agg) throws HiveException {
             try {
-                HLLBuffer myagg = (HLLBuffer) agg;
+                PrecisionBuffer myagg = (PrecisionBuffer) agg;
                 return myagg.getPartial();
             } catch (Exception e) {
                 LOG.error("Error", e);

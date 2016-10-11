@@ -12,10 +12,10 @@ import org.apache.hadoop.hive.ql.exec.UDF;
    public String evaluate(String os, String source) {
       try {
          if(source == "desktop")
-            return "web"
+            return "web";
 
          if(source == "mobile")
-            return source
+            return source;
 
          if(source != null)
             return "api." + source;

@@ -18,6 +18,7 @@ package brickhouse.udf.hll;
  **/
 
 import com.clearspring.analytics.stream.cardinality.CardinalityMergeException;
+import com.clearspring.analytics.stream.cardinality.HyperLogLog;
 import com.clearspring.analytics.stream.cardinality.HyperLogLogPlus;
 import com.clearspring.analytics.stream.cardinality.ICardinality;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator.AggregationBuffer;
@@ -68,7 +69,7 @@ public class HLLBuffer implements AggregationBuffer {
             precision = (int) Math.ceil(Math.log(other.sizeof()) / Math.log(2.0));
             LOG.debug("precision set to: " + precision);
         } else {
-            hll.merge(other);
+            hll = hll.merge(other);
         }
     }
 

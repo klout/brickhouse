@@ -28,7 +28,7 @@ Welcome to the Brickhouse
      
 Requirements:
 --------------
-  Brickhouse require Hive 0.9.0 or later;
+  Brickhouse require Hive 0.12.0 or later;
   Maven 2.0 and a Java JDK is required to build.
 
 Getting Started

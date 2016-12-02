@@ -20,8 +20,11 @@ public class CollectMergeMaxUDAF extends AbstractCollectMergeUDAF {
             put(LONG, LongEvaluator.class);
             put(FLOAT, FloatEvaluator.class);
             put(DOUBLE, DoubleEvaluator.class);
+            put(DATE, ComparableEvaluator.class);
+            put(DECIMAL, ComparableEvaluator.class);
             put(STRING, ComparableEvaluator.class);
             put(TIMESTAMP, ComparableEvaluator.class);
+            put(VARCHAR, ComparableEvaluator.class);
         }};
     }
 

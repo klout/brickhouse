@@ -9,12 +9,16 @@ import org.apache.hadoop.hive.ql.exec.UDF;
 
 ) public class GetDeviceUDF extends UDF {
 
+   boolean compare(String str1, String str2) {
+       return (str1==null || str2==null) ? str1 == str2 : str1.equals(str2);
+   }
+
    public String evaluate(String os, String source) {
       try {
-         if(source == "desktop")
+         if(compare(source, "desktop"))
             return "web";
 
-         if(source == "mobile")
+         if(compare(source, "mobile"))
             return source;
 
          if(source != null)

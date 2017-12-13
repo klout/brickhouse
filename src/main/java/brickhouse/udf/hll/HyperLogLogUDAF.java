@@ -180,9 +180,9 @@ public class HyperLogLogUDAF extends AbstractGenericUDAFResolver {
 
             try {
                 HLLBuffer myagg = (HLLBuffer) agg;
-
+                HLLBuffer partialObj = (HLLBuffer) partial;
                 byte[] partialBuffer = this.partialBufferOI
-                        .getPrimitiveJavaObject(partial);
+                        .getPrimitiveJavaObject(partialObj.getPartial());
                 myagg.merge(partialBuffer);
             } catch (Exception e) {
                 throw new HiveException(e);

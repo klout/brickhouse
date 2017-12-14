@@ -12,14 +12,14 @@ import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.JavaBinaryObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.log4j.Logger;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-@Ignore("not ready yet")
+//@Ignore("not ready yet")
 public class HyperLogLogUDAFTest {
     private static final Logger LOG = Logger.getLogger(HyperLogLogUDAFTest.class);
 

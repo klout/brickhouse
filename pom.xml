@@ -50,6 +50,42 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.google.common</pattern>
+                                    <shadedPattern>com.google.common.shaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.joda.time</pattern>
+                                    <shadedPattern>org.joda.time.shaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.codehaus.jackson</pattern>
+                                    <shadedPattern>org.codehaus.jackson.shaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.clearspring.analytics</pattern>
+                                    <shadedPattern>com.clearspring.analytics.shaded</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
@@ -84,14 +120,16 @@
                     </reportPlugins>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -104,20 +142,19 @@
                     </archive>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                  <additionalparam>-Xdoclint:none</additionalparam>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>jar</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -129,21 +166,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-        <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-gpg-plugin</artifactId>
-           <executions>
-             <execution>
-               <id>sign-artifacts</id>
-               <phase>verify</phase>
-               <goals>
-                 <goal>sign</goal>
-               </goals>
-             </execution>
-           </executions>
-         </plugin>
-         -->
         </plugins>
     </build>
 
@@ -161,19 +183,19 @@
     </reporting>
 
     <dependencies>
-
-        <!-- Hive -->
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-serde</artifactId>
             <optional>true</optional>
             <version>${apache.hive.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-common</artifactId>
             <version>${apache.hive.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -186,18 +208,21 @@
                     <artifactId>jdo2-api</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>${apache.hadoop.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <version>${apache.hbase.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -212,11 +237,7 @@
             <version>2.1</version>
         </dependency>
 
-        <!--
-           Depend on streamlib 
-		     for  HyperLogLog 
-		     implementation
-		  -->
+        <!-- Depend on streamlib for  HyperLogLog  implementation -->
         <dependency>
             <groupId>com.clearspring.analytics</groupId>
             <artifactId>stream</artifactId>
@@ -247,26 +268,14 @@
             <version>${codehaus.jackson.version}</version>
         </dependency>
 
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8</version>
             <scope>test</scope>
         </dependency>
-
-
     </dependencies>
-
-    <!--
-       <distributionManagement>
-         <repository>
-           <id>sonatype-nexus-staging</id>
-            <name>Nexus Staging Repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-         </repository>
-     </distributionManagement>
-     -->
-
 
     <distributionManagement>
         <repository>
@@ -280,6 +289,4 @@
             <url>http://maven.klout:8081/artifactory/libs-snapshot-local</url>
         </snapshotRepository>
     </distributionManagement>
-
-
 </project>

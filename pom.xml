@@ -67,8 +67,16 @@
                                     <shadedPattern>com.google.common.shaded</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>joda-time</pattern>
-                                    <shadedPattern>joda-time.shaded</shadedPattern>
+                                    <pattern>org.joda.time</pattern>
+                                    <shadedPattern>org.joda.time.shaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.codehaus.jackson</pattern>
+                                    <shadedPattern>org.codehaus.jackson.shaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.clearspring.analytics</pattern>
+                                    <shadedPattern>com.clearspring.analytics.shaded</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

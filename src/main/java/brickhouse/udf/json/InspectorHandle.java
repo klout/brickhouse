@@ -1,4 +1,4 @@
-package ru.mail.mining.mining_dwh.common.hive.udf.json;
+package brickhouse.udf.json;
 
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.serde2.objectinspector.ListObjectInspector;

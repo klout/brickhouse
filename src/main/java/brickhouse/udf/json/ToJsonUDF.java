@@ -1,4 +1,4 @@
-package ru.mail.mining.mining_dwh.common.hive.udf.json;
+package brickhouse.udf.json;
 /**
  * Copyright 2012 Klout, Inc
  *

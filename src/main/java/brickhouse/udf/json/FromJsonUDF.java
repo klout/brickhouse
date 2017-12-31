@@ -1,7 +1,5 @@
 package brickhouse.udf.json;
 /**
- * Forked from klout/brickhouse Github project
- *
  * Copyright 2012 Klout, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

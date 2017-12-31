@@ -1,4 +1,4 @@
-package brickhouse.udf.json;
+package ru.mail.mining.mining_dwh.common.hive.udf.json;
 
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDF;

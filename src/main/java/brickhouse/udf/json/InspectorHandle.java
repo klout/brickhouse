@@ -1,4 +1,4 @@
-package brickhouse.udf.json;
+package ru.mail.mining.mining_dwh.common.hive.udf.json;
 
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.serde2.objectinspector.ListObjectInspector;
@@ -83,6 +83,11 @@ public interface InspectorHandle {
 
         @Override
         public Object parseJson(JsonNode jsonNode) {
+            // To avoid NullPointerException when inner json is empty:
+            if (jsonNode == null) {
+                return null;
+            }
+
             /// For structs, they just return a list of object values
             if (jsonNode.isNull())
                 return null;
@@ -130,6 +135,11 @@ public interface InspectorHandle {
 
         @Override
         public Object parseJson(JsonNode jsonNode) {
+            // To avoid NullPointerException when inner json is empty:
+            if (jsonNode == null) {
+                return null;
+            }
+
             if (jsonNode.isNull())
                 return null;
             Map<String, Object> newMap = (Map<String, Object>) retInspector.create();
@@ -164,6 +174,11 @@ public interface InspectorHandle {
 
         @Override
         public Object parseJson(JsonNode jsonNode) {
+            // To avoid NullPointerException when inner json is empty:
+            if (jsonNode == null) {
+                return null;
+            }
+
             if (jsonNode.isNull())
                 return null;
             List newList = (List) retInspector.create(0);
@@ -202,8 +217,12 @@ public interface InspectorHandle {
 
         @Override
         public Object parseJson(JsonNode jsonNode) {
-            if (jsonNode == null
-                    || jsonNode.isNull()) {
+            // To avoid NullPointerException when inner json is empty:
+            if (jsonNode == null) {
+                return null;
+            }
+
+            if (jsonNode.isNull()) {
                 return null;
             }
             switch (category) {

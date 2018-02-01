@@ -17,7 +17,8 @@ package brickhouse.udf.hll;
  **/
 
 
-import com.clearspring.analytics.stream.cardinality.HyperLogLogPlus;
+import io.airlift.slice.Slices;
+import io.airlift.stats.cardinality.HyperLogLog;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -34,30 +35,22 @@ import org.apache.log4j.Logger;
  * Interpret a list of strings as a sketch_set
  * and return an estimated reach number
  */
-@Description(name = "hll_est_cardinality",
+@Description(name = "cardinality",
         value = "_FUNC_(x) - Estimate reach from a  HyperLogLog++. "
 )
 public class EstimateCardinalityUDF extends GenericUDF {
     private static final Logger LOG = Logger.getLogger(EstimateCardinalityUDF.class);
-
+    private static final String USAGE_MESSAGE = "cardinality takes a binary object which was created with the hyperloglog UDAF";
     private BinaryObjectInspector binaryInspector;
-
 
     @Override
     public Object evaluate(DeferredObject[] arg0) throws HiveException {
         try {
             Object blobObj = arg0[0].get();
-
-            ///ByteArrayRef bref = this.binaryInspector.getPrimitiveJavaObject(blobObj);
-            ///HyperLogLogPlus hll = HyperLogLogPlus.Builder.build( bref.getData() );
-
             byte[] bref = this.binaryInspector.getPrimitiveJavaObject(blobObj);
             if (bref == null)
                 return null;
-            HyperLogLogPlus hll = HyperLogLogPlus.Builder.build(bref);
-
-
-            return hll.cardinality();
+            return HyperLogLog.newInstance(Slices.wrappedBuffer(bref)).cardinality();
         } catch (Exception e) {
             LOG.error("Error", e);
             throw new HiveException(e);
@@ -67,7 +60,7 @@ public class EstimateCardinalityUDF extends GenericUDF {
 
     @Override
     public String getDisplayString(String[] arg0) {
-        StringBuilder sb = new StringBuilder("hll_est_cardinality( ");
+        StringBuilder sb = new StringBuilder("cardinality( ");
         for (int i = 0; i < arg0.length - 1; ++i) {
             sb.append(arg0[i]);
             sb.append(" , ");
@@ -81,19 +74,16 @@ public class EstimateCardinalityUDF extends GenericUDF {
     public ObjectInspector initialize(ObjectInspector[] arg0)
             throws UDFArgumentException {
         if (arg0.length != 1) {
-            throw new UDFArgumentException("hll_est_cardinality takes a binary object which was created with the hyperloglog UDAF");
+            throw new UDFArgumentException(USAGE_MESSAGE);
         }
         if (arg0[0].getCategory() != Category.PRIMITIVE) {
-            throw new UDFArgumentException("hll_est_cardinality takes a binary object which was created with the hyperloglog UDAF");
+            throw new UDFArgumentException(USAGE_MESSAGE);
         }
         PrimitiveObjectInspector primInsp = (PrimitiveObjectInspector) arg0[0];
         if (primInsp.getPrimitiveCategory() != PrimitiveCategory.BINARY) {
-            throw new UDFArgumentException("hll_est_cardinality takes a binary object which was created with the hyperloglog UDAF");
+            throw new UDFArgumentException(USAGE_MESSAGE);
         }
         this.binaryInspector = (BinaryObjectInspector) primInsp;
-
         return PrimitiveObjectInspectorFactory.javaLongObjectInspector;
     }
-
-
 }

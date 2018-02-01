@@ -34,7 +34,7 @@ import org.apache.log4j.Logger;
  * Aggregate multiple HyerLogLog structures together.
  */
 
-@Description(name = "union_hyperloglog",
+@Description(name = "merge",
         value = "_FUNC_(x) - Merges multiple hyperloglogs together. "
 )
 public class UnionHyperLogLogUDAF extends AbstractGenericUDAFResolver {

@@ -17,17 +17,14 @@ package brickhouse.udf.hll;
  *
  **/
 
-import com.clearspring.analytics.stream.cardinality.CardinalityMergeException;
-import com.clearspring.analytics.stream.cardinality.HyperLogLogPlus;
-import com.clearspring.analytics.stream.cardinality.ICardinality;
+import io.airlift.slice.Slices;
 import org.apache.hadoop.hive.ql.udf.generic.GenericUDAFEvaluator.AggregationBuffer;
 import org.apache.log4j.Logger;
-
-import java.io.IOException;
+import io.airlift.stats.cardinality.HyperLogLog;
 
 public class HLLBuffer implements AggregationBuffer {
     private static final Logger LOG = Logger.getLogger(HLLBuffer.class);
-    private ICardinality hll;
+    private HyperLogLog hll;
     private int precision;
 
     public HLLBuffer() {
@@ -41,7 +38,7 @@ public class HLLBuffer implements AggregationBuffer {
 
     public void init(int precision) {
         this.precision = precision;
-        hll = new HyperLogLogPlus(precision);
+        hll = HyperLogLog.newInstance(1<<precision);
     }
 
     public void reset() {
@@ -50,34 +47,31 @@ public class HLLBuffer implements AggregationBuffer {
     }
 
     public void addItem(String str) {
-        hll.offer(str);
+        hll.add(Slices.utf8Slice(str));
     }
 
-    public void merge(byte[] buffer) throws IOException,
-            CardinalityMergeException {
+    public void merge(byte[] buffer) {
         if (buffer == null) {
             return;
         }
 
-        ICardinality other = HyperLogLogPlus.Builder.build(buffer);
+        HyperLogLog other = HyperLogLog.newInstance(Slices.wrappedBuffer(buffer));
 
-        // if hll estimator hasn't been allocated yet, just set it equal to the partial
         if (hll == null) {
-            LOG.debug("hll is null; other.sizeof = " + other.sizeof());
+            LOG.debug("hll is null; other.sizeof = " + other.estimatedInMemorySize());
             hll = other;
-            precision = (int) Math.ceil(Math.log(other.sizeof()) / Math.log(2.0));
+            precision = (int) Math.ceil(Math.log(other.estimatedSerializedSize()) / Math.log(2.0));
             LOG.debug("precision set to: " + precision);
         } else {
-            hll.merge(other);
+            hll.mergeWith(other);
         }
     }
 
-    public byte[] getPartial() throws IOException {
+    public byte[] getPartial() {
         if (hll == null) {
             return null;
         }
-
-        return hll.getBytes();
+        return hll.serialize().getBytes();
     }
 
 }

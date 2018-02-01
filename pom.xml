@@ -64,19 +64,23 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.google.common</pattern>
-                                    <shadedPattern>com.google.common.shaded</shadedPattern>
+                                    <shadedPattern>com.google.common.brickshaded</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.guava</pattern>
+                                    <shadedPattern>com.google.guava.brickshaded</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.joda.time</pattern>
-                                    <shadedPattern>org.joda.time.shaded</shadedPattern>
+                                    <shadedPattern>org.joda.time.brickshaded</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.codehaus.jackson</pattern>
-                                    <shadedPattern>org.codehaus.jackson.shaded</shadedPattern>
+                                    <shadedPattern>org.codehaus.jackson.brickshaded</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.clearspring.analytics</pattern>
-                                    <shadedPattern>com.clearspring.analytics.shaded</shadedPattern>
+                                    <shadedPattern>com.clearspring.analytics.brickshaded</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -228,7 +232,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>23.0</version>
         </dependency>
 
         <dependency>
@@ -266,6 +270,12 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>${codehaus.jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.airlift</groupId>
+            <artifactId>stats</artifactId>
+            <version>0.161</version>
         </dependency>
 
         <!-- Test dependencies -->

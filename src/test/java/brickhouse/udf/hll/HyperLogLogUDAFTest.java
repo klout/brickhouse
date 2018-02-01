@@ -26,7 +26,7 @@ public class HyperLogLogUDAFTest {
 
     private static String TEST_HEADER = "\n************************************************************************\nRunning Test: ";
 
-//    @Test
+    @Test
     public void testSingleRowNullReturnsNull() throws HiveException {
         LOG.info(TEST_HEADER + "testSingleRowNullReturnsNull");
 

@@ -37,18 +37,18 @@ import org.apache.log4j.Logger;
 /**
  * Aggregate and return a HyperLogLog.
  * <p/>
- * Uses Clearspring's Stream-lib project
+ * Uses Airlift's Cardinality package
  */
 
-@Description(name = "hyperloglog",
+@Description(name = "approx_set",
         value = "_FUNC_(x, [b]) - Constructs a HyperLogLog++ estimator to estimate reach for large values, " +
                 "with optional bit parameter for specifying precision (b must be in [4,16])." +
-                "\nDefault is b = 6." +
+                "\nDefault is b = 12." +
                 "\nReturns a binary value that represents the HyperLogLog++ data structure."
 )
 public class HyperLogLogUDAF extends AbstractGenericUDAFResolver {
     private static final Logger LOG = Logger.getLogger(HyperLogLogUDAF.class);
-    static final int DEFAULT_PRECISION = 6;
+    static final int DEFAULT_PRECISION = 12;
     static final int MIN_PRECISION = 4;
     static final int MAX_PRECISION = 16;
 

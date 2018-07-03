@@ -10,7 +10,7 @@ Welcome to the Brickhouse
   Brickhouse covers a wide range of functionality, grouped in the 
      following packages.
 
- * _collect_ - An implementaion of "collect"  and various utilities
+ * _collect_ - An implementation of "collect"  and various utilities
      for dealing with maps and arrays.
    
  * _json_ - Translate between Hive structures and JSON strings

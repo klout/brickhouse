@@ -75,7 +75,7 @@ import java.util.Map;
 public class ToJsonUDF extends GenericUDF {
     private InspectorHandle inspHandle;
     private Boolean convertFlag = Boolean.FALSE;
-    private transient JsonFactory jsonFactory;
+    private JsonFactory jsonFactory;
 
 
     private interface InspectorHandle {

@@ -36,7 +36,7 @@ public class HyperLogLogUDAFTest {
                 PrimitiveObjectInspectorFactory.javaIntObjectInspector
         };
 
-        GenericUDAFParameterInfo paramInfo = new SimpleGenericUDAFParameterInfo(inputOiList, false, false);
+        GenericUDAFParameterInfo paramInfo = new SimpleGenericUDAFParameterInfo(inputOiList, false, false, false);
         GenericUDAFEvaluator udafEvaluator = udaf.getEvaluator(paramInfo);
 
         Mode m = Mode.COMPLETE;
@@ -68,10 +68,10 @@ public class HyperLogLogUDAFTest {
                 PrimitiveObjectInspectorFactory.javaIntObjectInspector
         };
 
-        GenericUDAFParameterInfo paramInfo1 = new SimpleGenericUDAFParameterInfo(inputOiList1, false, false);
+        GenericUDAFParameterInfo paramInfo1 = new SimpleGenericUDAFParameterInfo(inputOiList1, false, false, false);
         GenericUDAFEvaluator udafEvaluator1 = udaf.getEvaluator(paramInfo1);
 
-        GenericUDAFParameterInfo paramInfo2 = new SimpleGenericUDAFParameterInfo(inputOiList2, false, false);
+        GenericUDAFParameterInfo paramInfo2 = new SimpleGenericUDAFParameterInfo(inputOiList2, false, false, false);
         GenericUDAFEvaluator udafEvaluator2 = udaf.getEvaluator(paramInfo2);
 
         Mode m1 = Mode.PARTIAL1;
@@ -111,7 +111,7 @@ public class HyperLogLogUDAFTest {
                 PrimitiveObjectInspectorFactory.javaIntObjectInspector
         };
 
-        GenericUDAFParameterInfo paramInfo = new SimpleGenericUDAFParameterInfo(inputOiList, false, false);
+        GenericUDAFParameterInfo paramInfo = new SimpleGenericUDAFParameterInfo(inputOiList, false, false, false);
         GenericUDAFEvaluator udafEvaluator = udaf.getEvaluator(paramInfo);
 
         Mode m = Mode.COMPLETE;
@@ -137,7 +137,7 @@ public class HyperLogLogUDAFTest {
                 PrimitiveObjectInspectorFactory.javaIntObjectInspector
         };
 
-        GenericUDAFParameterInfo paramInfo = new SimpleGenericUDAFParameterInfo(inputOiList, false, false);
+        GenericUDAFParameterInfo paramInfo = new SimpleGenericUDAFParameterInfo(inputOiList, false, false, false);
         GenericUDAFEvaluator udafEvaluator = udaf.getEvaluator(paramInfo);
 
         Mode m = Mode.COMPLETE;

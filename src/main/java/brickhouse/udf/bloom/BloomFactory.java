@@ -17,6 +17,9 @@ package brickhouse.udf.bloom;
  **/
 
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.hadoop.util.bloom.BloomFilter;
 import org.apache.hadoop.util.bloom.Filter;
@@ -32,6 +35,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Utility class for construction and serialization of BloomFilters ...
@@ -145,5 +149,32 @@ public class BloomFactory {
         }
     }
 
+    private static class Cache {
+        private static final LoadingCache<String, Filter> cache = init();
+
+        private static LoadingCache<String, Filter> init() {
+            LOG.info("Initializing cache");
+            return CacheBuilder.newBuilder()
+                    .maximumSize(128)
+                    .build(
+                            new CacheLoader<String, Filter>() {
+                                public Filter load(String bloomString) throws IOException {
+                                    return ReadBloomFromString(bloomString);
+                                }
+                            });
+        }
+
+        public static Filter get(String bloomString) {
+            try {
+                return cache.get(bloomString);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(String.format("Cache lookup error on key [%s]", bloomString), e.getCause());
+            }
+        }
+    }
+
+    public Filter ReadBloomFromStringCached(String bloomStr) {
+        return Cache.get(bloomStr);
+    }
 
 }

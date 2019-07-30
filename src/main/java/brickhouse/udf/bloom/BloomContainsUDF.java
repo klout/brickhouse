@@ -18,10 +18,15 @@ package brickhouse.udf.bloom;
 
 
 import org.apache.hadoop.hive.ql.exec.Description;
-import org.apache.hadoop.hive.ql.exec.UDF;
+import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
+import org.apache.hadoop.hive.ql.udf.generic.GenericUDF;
+import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector;
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.PrimitiveObjectInspectorFactory;
 import org.apache.hadoop.util.bloom.Filter;
 import org.apache.hadoop.util.bloom.Key;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 /**
  * Returns true if the bloom (probably) contains the string
@@ -31,16 +36,49 @@ import org.apache.hadoop.util.bloom.Key;
         value = " Returns true if the referenced bloom filter contains the key.. \n " +
                 "_FUNC_(string key, string bloomfilter) "
 )
-public class BloomContainsUDF extends UDF {
+public class BloomContainsUDF extends GenericUDF {
 
+    private static Integer counter = 0;
+    private static final Logger LOG = LoggerFactory.getLogger(BloomContainsUDF.class);
+    private static BloomFactory factory = new BloomFactory();
 
-    public Boolean evaluate(String key, String bloomFilter) throws HiveException {
-        Filter bloom = BloomFactory.GetBloomFilter(bloomFilter);
+    @Override
+    public ObjectInspector initialize(ObjectInspector[] OIs) throws UDFArgumentException {
+        // validation for the number of arguments
+        if (OIs.length != 2) {
+            throw new UDFArgumentException(getClass().getName() + " requires 2 args: key, bloom");
+        }
+
+        // output data type of the UDF
+        return PrimitiveObjectInspectorFactory.javaBooleanObjectInspector;
+    }
+
+    @Override
+    public Boolean evaluate(DeferredObject[] args) throws HiveException {
+        String key = args[0].get().toString();
+        String bloomFilter = args[1].get().toString();
+        counter ++;
+        long startTime = System.nanoTime();
+        Filter bloom = factory.ReadBloomFromStringCached(bloomFilter);
+        long endTime   = System.nanoTime();
+        if (counter % 100 == 0) {
+            LOG.info(String.format("Serialization time: %d",endTime - startTime));
+        }
         if (bloom != null) {
-            return bloom.membershipTest(new Key(key.getBytes()));
+            Boolean res = bloom.membershipTest(new Key(key.getBytes()));
+            long searchEndTime = System.nanoTime();
+            if (counter % 100 == 0) {
+                LOG.info(String.format("Membership time: %d",searchEndTime - endTime));
+            }
+            return res;
+
         } else {
             throw new HiveException("Unable to find bloom " + bloomFilter);
         }
     }
 
+    @Override
+    public String getDisplayString(String[] children) {
+        return "bloom_contains<key, bloom>";
+    }
 }

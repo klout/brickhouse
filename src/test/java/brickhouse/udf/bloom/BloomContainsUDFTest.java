@@ -52,6 +52,6 @@ public class BloomContainsUDFTest {
         }
         System.out.println("Hits:" + hitCounter);
         System.out.println("Misses:" + missCounter);
-        Assert.assertEquals(hitCounter, missCounter, elemsToCheck.size()/100);
+        Assert.assertEquals(hitCounter, missCounter, 0.05 * elemsToCheck.size());
     }
 }

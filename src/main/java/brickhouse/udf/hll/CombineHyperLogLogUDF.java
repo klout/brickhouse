@@ -17,8 +17,8 @@ package brickhouse.udf.hll;
  **/
 
 
-import com.clearspring.analytics.stream.cardinality.HyperLogLogPlus;
-import com.clearspring.analytics.stream.cardinality.ICardinality;
+import io.airlift.slice.Slices;
+import io.airlift.stats.cardinality.HyperLogLog;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
@@ -54,11 +54,11 @@ public class CombineHyperLogLogUDF extends GenericUDF {
             byte[] bref2 = this.binary2Inspector.getPrimitiveJavaObject(blobObj2);
 
             if (bref1 != null && bref2 != null) {
-                HyperLogLogPlus hll1 = HyperLogLogPlus.Builder.build(bref1);
-                HyperLogLogPlus hll2 = HyperLogLogPlus.Builder.build(bref2);
+                HyperLogLog hll1 = HyperLogLog.newInstance(Slices.wrappedBuffer(bref1));
+                HyperLogLog hll2 = HyperLogLog.newInstance(Slices.wrappedBuffer(bref2));
 
-                ICardinality merged = hll1.merge(hll2);
-                return merged.getBytes();
+                hll1.mergeWith(hll2);
+                return hll1.serialize().getBytes();
             } else {
                 return null;
             }

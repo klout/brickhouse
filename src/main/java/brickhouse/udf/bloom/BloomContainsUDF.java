@@ -61,14 +61,14 @@ public class BloomContainsUDF extends GenericUDF {
         long startTime = System.nanoTime();
         Filter bloom = factory.ReadBloomFromStringCached(bloomFilter);
         long endTime   = System.nanoTime();
-        if (counter % 100 == 0) {
-            LOG.info(String.format("Serialization time: %d",endTime - startTime));
+        if (counter % 1000 == 0) {
+            LOG.debug(String.format("Serialization time: %d",endTime - startTime));
         }
         if (bloom != null) {
             Boolean res = bloom.membershipTest(new Key(key.getBytes()));
             long searchEndTime = System.nanoTime();
-            if (counter % 100 == 0) {
-                LOG.info(String.format("Membership time: %d",searchEndTime - endTime));
+            if (counter % 1000 == 0) {
+                LOG.debug(String.format("Membership time: %d",searchEndTime - endTime));
             }
             return res;
 

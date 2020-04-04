@@ -85,7 +85,13 @@ public class DistributedBloomUDF extends GenericUDF {
                 if (subFile.endsWith("crc")) {
                     LOG.info(" Ignoring CRC file " + mapFilename);
                     continue;
-                } else {
+                }
+                else if(subFile.contains("hive-staging")){
+                    LOG.info(" Ignoring hive staging file " + mapFilename);
+                    continue;
+                }
+
+                else {
                     FileInputStream inStream = new FileInputStream(mapFilename + "/" + subFile);
                     return BloomFactory.ReadBloomFromStream(inStream);
                 }
@@ -107,6 +113,7 @@ public class DistributedBloomUDF extends GenericUDF {
      */
     public String evaluate(String mapFilename, Boolean returnEncoded) throws HiveException {
         try {
+            LOG.info(" Map file " + mapFilename);
             Filter bloom = BloomFactory.GetNamedBloomFilter(mapFilename);
             if (bloom == null) {
                 bloom = this.loadBloom(mapFilename);

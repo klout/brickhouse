@@ -4,7 +4,7 @@
 
     <groupId>com.klout</groupId>
     <artifactId>brickhouse</artifactId>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.7.1-jobs-ab-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Brickhouse</name>
     <description>Extensions of Hive for the Data Developer</description>
@@ -40,14 +40,48 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <apache.hadoop.version>0.20.2</apache.hadoop.version>
-        <apache.hbase.version>0.92.1</apache.hbase.version>
-        <apache.hive.version>0.10.0</apache.hive.version>
+        <apache.hadoop.version>2.5.0-cdh5.3.3</apache.hadoop.version>
+        <apache.hbase.version>0.98.6-cdh5.3.3</apache.hbase.version>
+        <apache.hive.version>0.13.1-cdh5.3.3</apache.hive.version>
         <codehaus.jackson.version>1.8.8</codehaus.jackson.version>
+        <hadoop.client.version>2.5.0-mr1-cdh5.3.3</hadoop.client.version>
+        <testng.version>6.3.1</testng.version>
+        <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    </transformers>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                    <relocations>
+                        <relocation>
+                            <!-- MR in CDH5.1 puts Guava 11 on the classpath, which breaks DQDataTypes -->
+                            <pattern>com.google.common</pattern>
+                            <shadedPattern>org.shaded.google.common</shadedPattern>
+                        </relocation>
+                    </relocations>
+                    <artifactSet>
+                        <includes>
+                            <include>com.google.guava:guava</include>
+                            <include>com.klout:brickhouse</include>
+                        </includes>
+                    </artifactSet>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -164,6 +198,12 @@
 
         <!-- Hive -->
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>18.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-serde</artifactId>
             <optional>true</optional>
@@ -177,34 +217,17 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.hive</groupId>
-            <artifactId>hive-exec</artifactId>
-            <version>${apache.hive.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.jdo</groupId>
-                    <artifactId>jdo2-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
-            <version>${apache.hadoop.version}</version>
+            <version>${hadoop.client.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase</artifactId>
+            <artifactId>hbase-client</artifactId>
             <version>${apache.hbase.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>18.0</version>
-        </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
@@ -213,8 +236,8 @@
         </dependency>
 
         <!--
-           Depend on streamlib 
-		     for  HyperLogLog 
+           Depend on streamlib
+		     for  HyperLogLog
 		     implementation
 		  -->
         <dependency>
@@ -254,6 +277,32 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-exec</artifactId>
+            <version>${apache.hive.version}</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.jdo</groupId>
+                    <artifactId>jdo2-api</artifactId>
+                </exclusion>
+            </exclusions>
+
+        </dependency>
+
+        <dependency>
+          <groupId>org.testng</groupId>
+          <artifactId>testng</artifactId>
+          <version>${testng.version}</version>
+          <scope>test</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-core-asl</artifactId>
+          <version>${jackson-core-asl.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -266,6 +315,12 @@
          </repository>
      </distributionManagement>
      -->
+    <repositories>
+        <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+    </repositories>
 
 
     <distributionManagement>

@@ -1,7 +1,5 @@
 package brickhouse.udf.json;
 /**
- * Forked from klout/brickhouse Github project
- *
  * Copyright 2012 Klout, Inc
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +16,7 @@ package brickhouse.udf.json;
  *
  **/
 
-import ru.mail.mining.mining_dwh.common.hive.udf.json.InspectorHandle.InspectorHandleFactory;
+import brickhouse.udf.json.InspectorHandle.InspectorHandleFactory;
 import org.apache.hadoop.hive.ql.exec.Description;
 import org.apache.hadoop.hive.ql.exec.UDFArgumentException;
 import org.apache.hadoop.hive.ql.metadata.HiveException;
